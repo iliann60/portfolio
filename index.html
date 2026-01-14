@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ilian DUONG | Portfolio High-Tech</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #00f2ff;
+            --secondary: #7000ff;
+            --bg: #050505;
+            --card: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.1);
+            --text: #ffffff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Outfit', sans-serif;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* Arrière-plan dynamique */
+        .bg-blobs {
+            position: fixed; width: 100%; height: 100%; z-index: -1; overflow: hidden;
+        }
+        .blob {
+            position: absolute; width: 400px; height: 400px; background: var(--secondary);
+            filter: blur(120px); border-radius: 50%; opacity: 0.15; animation: move 20s infinite alternate;
+        }
+        .blob.blue { background: var(--primary); left: -100px; top: -100px; animation-delay: -5s; }
+        .blob.purple { bottom: -100px; right: -100px; }
+
+        @keyframes move {
+            from { transform: translate(0, 0); }
+            to { transform: translate(100px, 100px); }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed; top: 0; width: 100%; padding: 1.5rem 5%;
+            display: flex; justify-content: space-between; align-items: center;
+            backdrop-filter: blur(20px); z-index: 1000; border-bottom: 1px solid var(--border);
+        }
+        .nav-links a {
+            color: white; text-decoration: none; margin-left: 2rem;
+            font-size: 0.9rem; transition: 0.3s; opacity: 0.6;
+        }
+        .nav-links a:hover { opacity: 1; color: var(--primary); }
+
+        /* Social Sidebar (Ajout Leboncoin) */
+        .social-sidebar {
+            position: fixed; left: 2rem; bottom: 50%; transform: translateY(50%);
+            display: flex; flex-direction: column; gap: 1.5rem; z-index: 1000;
+        }
+        .social-sidebar a {
+            color: white; font-size: 1.5rem; transition: 0.4s; opacity: 0.4;
+        }
+        .social-sidebar a:hover { opacity: 1; color: var(--primary); transform: scale(1.2); }
+
+        /* Header / Hero */
+        header {
+            height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center;
+            text-align: center; padding: 0 10%;
+        }
+
+        .pp-container {
+            position: relative; width: 200px; height: 200px; margin-bottom: 2rem;
+            animation: float 6s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        .pp-image {
+            width: 100%; height: 100%; border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+            background: url('ilian-pp.jpg') center/cover;
+            border: 2px solid var(--primary); box-shadow: 0 0 30px rgba(0, 242, 255, 0.2);
+        }
+
+        h1 { font-size: clamp(3rem, 8vw, 5rem); font-weight: 700; line-height: 0.9; }
+        .gradient-text {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+
+        .links-group { display: flex; gap: 20px; margin-top: 3rem; flex-wrap: wrap; justify-content: center; }
+        .btn {
+            padding: 12px 25px; border-radius: 50px; text-decoration: none; font-weight: 600;
+            transition: 0.4s; border: 1px solid var(--border); color: white; display: flex; align-items: center; gap: 10px;
+        }
+        .btn:hover { background: white; color: black; transform: translateY(-5px); }
+        .btn img { height: 20px; }
+
+        /* Experience Section */
+        section { padding: 100px 10%; }
+        .section-title { font-size: 2.5rem; margin-bottom: 3rem; }
+
+        .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
+        .glass-card {
+            background: var(--card); border: 1px solid var(--border); padding: 2rem;
+            border-radius: 20px; backdrop-filter: blur(10px); transition: 0.4s;
+        }
+        .glass-card:hover { background: rgba(255,255,255,0.07); border-color: var(--primary); cursor: default; }
+
+        /* Skills Tags */
+        .skill-tags { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 1rem; }
+        .skill-tag { 
+            background: rgba(0, 242, 255, 0.1); border: 1px solid var(--primary); 
+            padding: 5px 12px; border-radius: 15px; font-size: 0.8rem; font-family: 'Fira Code';
+        }
+
+        /* Home-Lab Interactif */
+        .homelab-box {
+            background: linear-gradient(135deg, rgba(112,0,255,0.1), rgba(0,242,255,0.1));
+            border: 1px solid var(--primary); padding: 4rem; border-radius: 30px; text-align: center;
+            position: relative; overflow: hidden;
+        }
+        .status-dot {
+            display: inline-block; width: 10px; height: 10px; background: var(--primary);
+            border-radius: 50%; margin-right: 10px; box-shadow: 0 0 10px var(--primary);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+
+        footer { padding: 50px; text-align: center; opacity: 0.4; font-size: 0.8rem; border-top: 1px solid var(--border); }
+
+    </style>
+</head>
+<body>
+
+    <div class="bg-blobs">
+        <div class="blob blue"></div>
+        <div class="blob purple"></div>
+    </div>
+
+    <div class="social-sidebar">
+        <a href="https://www.linkedin.com/in/ilian-duong-07935a348/" target="_blank"><i class="fab fa-linkedin"></i></a>
+        <a href="https://github.com/iliann60" target="_blank"><i class="fab fa-github"></i></a>
+        <a href="https://www.leboncoin.fr/profile/1779e6b4-2361-4e8d-b23c-b01915e741e2/offers" target="_blank" title="Mes annonces Tech"><i class="fas fa-store"></i></a>
+        <a href="https://www.instagram.com/_iliann60/#" target="_blank"><i class="fab fa-instagram"></i></a>
+        <a href="https://www.snapchat.com/add/ilian6060" target="_blank"><i class="fab fa-snapchat"></i></a>
+    </div>
+
+    <nav>
+        <div style="font-weight: 700; font-size: 1.2rem; letter-spacing: 2px;">ILIAN<span style="color:var(--primary)">.</span>PORTFOLIO</div>
+        <div class="nav-links">
+            <a href="#about">Profil</a>
+            <a href="#pro">Missions Magnum</a>
+            <a href="#skills">Compétences</a>
+            <a href="#projects">Projets Perso</a>
+            <a href="#homelab">Lab</a>
+        </div>
+    </nav>
+
+    <header id="about">
+        <div class="pp-container">
+            <div class="pp-image"></div> </div>
+        <p style="text-transform: uppercase; letter-spacing: 4px; font-size: 0.8rem; margin-bottom: 1rem; opacity: 0.7;">Étudiant EFREI Paris & Alternant Magnum</p>
+        <h1>DUONG <span class="gradient-text">Ilian</span></h1>
+        
+        <div class="links-group">
+            <a href="https://www.efrei.fr" target="_blank" class="btn">
+                <img src="logo-efrei.png" alt=""> EFREI Paris
+            </a>
+            <a href="https://www.magnum.fr" target="_blank" class="btn">
+                <img src="logo-magnum.png" alt=""> Magnum
+            </a>
+        </div>
+    </header>
+
+<section id="pro">
+        <h2 class="section-title">Missions <span style="color:var(--primary);">Entreprise @ Magnum</span></h2>
+        <div class="card-grid">
+            <div class="glass-card">
+                <i class="fas fa-chart-line" style="font-size: 2rem; color: var(--primary); margin-bottom: 1.5rem;"></i>
+                <h3>Supervision WhatsUp Gold</h3>
+                <p>Mise en place et gestion du monitoring réseau. Surveillance en temps réel des serveurs et alertes critiques (SNMP).</p>
+                <div class="skill-tags">
+                    <span class="skill-tag">WUG</span>
+                    <span class="skill-tag">Monitoring</span>
+                    <span class="skill-tag">Alerting</span>
+                </div>
+            </div>
+
+            <div class="glass-card">
+                <i class="fas fa-laptop-code" style="font-size: 2rem; color: var(--secondary); margin-bottom: 1.5rem;"></i>
+                <h3>Masterisation & Déploiement</h3>
+                <p>Industrialisation du parc informatique via des solutions de déploiement d'images système automatisées.</p>
+                <div class="skill-tags">
+                    <span class="skill-tag">WDS</span>
+                    <span class="skill-tag">MDT</span>
+                    <span class="skill-tag">GPO</span>
+                    <span class="skill-tag">Images Système</span>
+                </div>
+            </div>
+
+            <div class="glass-card">
+                <i class="fas fa-ticket-alt" style="font-size: 2rem; color: #00ff88; margin-bottom: 1.5rem;"></i>
+                <h3>Support & Ticketing</h3>
+                <p>Prise en charge des incidents N1/N2, gestion du cycle de vie des tickets et résolution technique pour les utilisateurs.</p>
+                <div class="skill-tags">
+                    <span class="skill-tag">GLPI</span>
+                    <span class="skill-tag">Ticketing</span>
+                    <span class="skill-tag">Relation Client</span>
+                    <span class="skill-tag">Assistance</span>
+                </div>
+            </div>
+
+            <div class="glass-card">
+                <i class="fas fa-network-wired" style="font-size: 2rem; color: white; margin-bottom: 1.5rem;"></i>
+                <h3>Infrastructure & Brassage</h3>
+                <p>Maintenance physique et logique : brassage réseau en baie, administration Windows Server et gestion de parc.</p>
+                <div class="skill-tags">
+                    <span class="skill-tag">Brassage RJ45</span>
+                    <span class="skill-tag">Baies de brassage</span>
+                    <span class="skill-tag">Active Directory</span>
+                    <span class="skill-tag">VLANs</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+<section id="projects" style="background: rgba(112, 0, 255, 0.05);">
+        <h2 class="section-title">Projets <span style="color:var(--primary);">Perso & Dev</span></h2>
+        <div class="card-grid">
+            <div class="glass-card">
+                <i class="fas fa-code" style="font-size: 2rem; color: #ff4444; margin-bottom: 1.5rem;"></i>
+                <h3>Développement FiveM</h3>
+                <p>Conception complète de serveurs GTA V RP. Création de scripts personnalisés et gestion de l'infrastructure VPS Linux.</p>
+                <div class="skill-tags">
+                    <span class="skill-tag">Lua</span>
+                    <span class="skill-tag">MySQL</span>
+                    <span class="skill-tag">Linux VPS</span>
+                    <span class="skill-tag">Optimization</span>
+                </div>
+            </div>
+
+            <div class="glass-card">
+                <i class="fas fa-server" style="font-size: 2rem; color: var(--primary); margin-bottom: 1.5rem;"></i>
+                <h3>Déploiement Homelab</h3>
+                <p>Mise en place d'une infrastructure virtualisée complète. Gestion du cycle de vie des serveurs, du réseau et de la sécurité distante.</p>
+                <div class="skill-tags">
+                    <span class="skill-tag">Hyperviseur</span>
+                    <span class="skill-tag">Active Directory</span>
+                    <span class="skill-tag">VPN Wireguard</span>
+                    <span class="skill-tag">Outils de sécurité</span>
+                </div>
+            </div>
+
+            <div class="glass-card">
+                <i class="fas fa-tools" style="font-size: 2rem; color: #f56b2a; margin-bottom: 1.5rem;"></i>
+                <h3>Expertise Hardware (Leboncoin)</h3>
+                <p>Prestations de services tech : montage de configurations PC avancées, diagnostic hardware et troubleshooting.</p>
+                <div class="skill-tags">
+                    <span class="skill-tag">Montage PC</span>
+                    <span class="skill-tag">Diagnostic</span>
+                    <span class="skill-tag">Hardware</span>
+                    <span class="skill-tag">Optimisation</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+<section id="skills">
+        <h2 class="section-title">Hard <span style="color:var(--secondary);">Skills</span></h2>
+        <div class="card-grid">
+            <div class="glass-card">
+                <i class="fas fa-server" style="font-size: 1.5rem; color: var(--primary); margin-bottom: 1rem;"></i>
+                <h4>Admin Système</h4>
+                <div class="skill-tags">
+                    <span class="skill-tag">Windows Server</span>
+                    <span class="skill-tag">Active Directory</span>
+                    <span class="skill-tag">Debian</span>
+                    <span class="skill-tag">DNS/DHCP</span>
+                </div>
+            </div>
+
+            <div class="glass-card">
+                <i class="fas fa-shield-alt" style="font-size: 1.5rem; color: var(--secondary); margin-bottom: 1rem;"></i>
+                <h4>Réseau & Sécurité</h4>
+                <div class="skill-tags">
+                    <span class="skill-tag">VPN Wireguard</span>
+                    <span class="skill-tag">VLANs</span>
+                    <span class="skill-tag">Firewalling</span>
+                    <span class="skill-tag">Cisco Packet Tracer</span>
+                </div>
+            </div>
+
+            <div class="glass-card">
+                <i class="fas fa-microchip" style="font-size: 1.5rem; color: #ffcc00; margin-bottom: 1rem;"></i>
+                <h4>Hardware & Expertise</h4>
+                <div class="skill-tags">
+                    <span class="skill-tag">Montage PC</span>
+                    <span class="skill-tag">Architecture PC</span>
+                    <span class="skill-tag">Diagnostic Panne</span>
+                    <span class="skill-tag">Optimisation BIOS</span>
+                    <span class="skill-tag">Benchmark</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="homelab">
+        <div class="homelab-box">
+            <div style="margin-bottom: 1rem;"><span class="status-dot"></span> <span style="font-family: 'Fira Code'; font-size: 0.8rem; color: var(--primary);">SERVER AD/DNS/DHCP/WEB ONLNE</span></div>
+            <h2 style="font-size: 3rem; margin-bottom: 1.5rem;">Mini Data Center Personnel</h2>
+            <p style="max-width: 800px; margin: 0 auto; opacity: 0.8; font-size: 1.1rem;">
+                Infrastructure sous <strong>Windows Server et Hyperviseur Debian</strong> avec domaine Windows (AD/DNS/WEB), instances Debian (Web/GLPI) et accès sécurisé via <strong>VPN Wireguard</strong>.
+            </p>
+        </div>
+    </section>
+
+    <footer>
+        <p>© 2026 Ilian DUONG - Réalisé pour le BTS SIO & Au-delà</p>
+    </footer>
+
+    <script>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('section, .glass-card').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(40px)';
+            el.style.transition = 'all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1)';
+            observer.observe(el);
+        });
+
+        document.querySelectorAll('.glass-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                card.style.background = `radial-gradient(circle at ${x}px ${y}px, rgba(0,242,255,0.15), rgba(255,255,255,0.03))`;
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.background = 'var(--card)';
+            });
+        });
+    </script>
+</body>
+</html>
