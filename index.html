@@ -131,6 +131,23 @@
 
         footer { padding: 50px; text-align: center; opacity: 0.4; font-size: 0.8rem; border-top: 1px solid var(--border); }
 
+        /* AJOUTS POUR LE MOBILE - NE MODIFIE PAS TON CODE EXISTANT */
+        @media (max-width: 768px) {
+            nav { padding: 1rem; justify-content: center; }
+            .nav-links { display: none; } /* On cache les liens pour pas que ça se chevauche */
+            .social-sidebar { 
+                flex-direction: row; bottom: 20px; left: 50%; 
+                transform: translateX(-50%); background: rgba(0,0,0,0.5);
+                padding: 10px 20px; border-radius: 50px; backdrop-filter: blur(10px);
+                border: 1px solid var(--border);
+            }
+            header { padding: 0 5%; }
+            .pp-container { width: 150px; height: 150px; }
+            .section-title { font-size: 1.8rem; }
+            section { padding: 60px 5%; }
+            .homelab-box { padding: 2rem 1rem; }
+            .homelab-box h2 { font-size: 1.8rem !important; }
+        }
     </style>
 </head>
 <body>
@@ -206,10 +223,11 @@
                 <h3>Support & Ticketing</h3>
                 <p>Prise en charge des incidents N1/N2, gestion du cycle de vie des tickets et résolution technique pour les utilisateurs.</p>
                 <div class="skill-tags">
-                    <span class="skill-tag">GLPI</span>
+                    <span class="skill-tag">FreshDesk</span>
                     <span class="skill-tag">Ticketing</span>
                     <span class="skill-tag">Relation Client</span>
                     <span class="skill-tag">Assistance</span>
+                    <span class="skill-tag">Intervention sur site</span>
                 </div>
             </div>
 
@@ -317,6 +335,122 @@
         </div>
     </section>
 
+    <section id="game-zone">
+    <h2 class="section-title">Pause <span style="color:var(--primary);">D-Gaming</span></h2>
+    <div class="glass-card" style="max-width: 500px; margin: 0 auto; text-align: center;">
+        <p style="font-family: 'Fira Code'; font-size: 0.8rem; margin-bottom: 1rem; color: var(--primary);">// SYSTÈME DE DIVERTISSEMENT ACTIF</p>
+        
+        <canvas id="snakeGame" width="300" height="300" style="background: #000; border: 2px solid var(--primary); border-radius: 10px; box-shadow: 0 0 20px rgba(0, 242, 255, 0.2);"></canvas>
+        
+        <div style="margin-top: 1rem;">
+            <p id="score">Score: 0</p>
+            <button onclick="startGame()" class="btn" style="margin: 10px auto; font-size: 0.8rem; padding: 8px 20px;">
+                <i class="fas fa-play"></i> LANCER LE SYSTÈME
+            </button>
+            <p style="font-size: 0.7rem; opacity: 0.5;">Utilisez les flèches du clavier pour diriger le flux.</p>
+        </div>
+    </div>
+</section>
+
+<script>
+    const canvas = document.getElementById("snakeGame");
+    const ctx = canvas.getContext("2d");
+    const scoreElement = document.getElementById("score");
+    
+    const box = 20; // Taille d'une case
+    const rows = 15; // Nombre de cases (300 / 20)
+    
+    let snake, food, direction, nextDirection, score, game;
+
+    function startGame() {
+        clearInterval(game);
+        // On initialise avec des coordonnées de grille (indices 0 à 14)
+        snake = [{ x: 7, y: 7 }]; 
+        direction = "RIGHT";
+        nextDirection = "RIGHT";
+        score = 0;
+        scoreElement.innerHTML = "Score: " + score;
+        spawnFood();
+        game = setInterval(draw, 170); // Vitesse plus lente
+    }
+
+    function spawnFood() {
+        food = {
+            x: Math.floor(Math.random() * rows),
+            y: Math.floor(Math.random() * rows)
+        };
+        // Ne pas faire apparaître sur le serpent
+        for(let cell of snake) {
+            if(cell.x === food.x && cell.y === food.y) spawnFood();
+        }
+    }
+
+    window.addEventListener("keydown", function(e) {
+        if([37, 38, 39, 40].indexOf(e.keyCode) > -1) e.preventDefault();
+        
+        if (e.keyCode == 37 && direction != "RIGHT") nextDirection = "LEFT";
+        else if (e.keyCode == 38 && direction != "DOWN") nextDirection = "UP";
+        else if (e.keyCode == 39 && direction != "LEFT") nextDirection = "RIGHT";
+        else if (e.keyCode == 40 && direction != "UP") nextDirection = "DOWN";
+    });
+
+    function draw() {
+        direction = nextDirection;
+        
+        // Nettoyage propre du canvas
+        ctx.fillStyle = "black";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Dessin du serpent (conversion indices -> pixels)
+        for (let i = 0; i < snake.length; i++) {
+            ctx.fillStyle = (i == 0) ? "#00f2ff" : "#7000ff";
+            ctx.fillRect(snake[i].x * box, snake[i].y * box, box, box);
+            ctx.strokeStyle = "black";
+            ctx.strokeRect(snake[i].x * box, snake[i].y * box, box, box);
+        }
+
+        // Dessin nourriture
+        ctx.fillStyle = "#00ff88";
+        ctx.fillRect(food.x * box, food.y * box, box, box);
+
+        let headX = snake[0].x;
+        let headY = snake[0].y;
+
+        if (direction == "LEFT") headX--;
+        if (direction == "UP") headY--;
+        if (direction == "RIGHT") headX++;
+        if (direction == "DOWN") headY++;
+
+        // VERIFICATION STRICTE DES BORDURES (Indices 0 à 14)
+        if (headX < 0 || headX >= rows || headY < 0 || headY >= rows || collision({x: headX, y: headY}, snake)) {
+            clearInterval(game);
+            setTimeout(() => { 
+                alert("Système corrompu ! Score final : " + score);
+            }, 10);
+            return;
+        }
+
+        let newHead = { x: headX, y: headY };
+
+        if (headX === food.x && headY === food.y) {
+            score++;
+            scoreElement.innerHTML = "Score: " + score;
+            spawnFood();
+        } else {
+            snake.pop();
+        }
+
+        snake.unshift(newHead);
+    }
+
+    function collision(head, array) {
+        for (let i = 0; i < array.length; i++) {
+            if (head.x === array[i].x && head.y === array[i].y) return true;
+        }
+        return false;
+    }
+</script>
+
     <footer>
         <p>© 2026 Ilian DUONG - Réalisé pour le BTS SIO & Au-delà</p>
     </footer>
@@ -351,6 +485,4 @@
         });
     </script>
 </body>
-
 </html>
-
