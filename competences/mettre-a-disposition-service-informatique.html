@@ -1,1 +1,133 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Détail Compétence | Ilian DUONG</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #00f2ff;
+            --secondary: #7000ff;
+            --bg: #050505;
+            --card: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.1);
+            --text: #ffffff;
+        }
 
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Outfit', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Arrière-plan dynamique (Identique à l'index) */
+        .bg-blobs { position: fixed; width: 100%; height: 100%; z-index: -1; overflow: hidden; }
+        .blob { position: absolute; width: 400px; height: 400px; background: var(--secondary); filter: blur(120px); border-radius: 50%; opacity: 0.15; animation: move 20s infinite alternate; }
+        .blob.blue { background: var(--primary); left: -100px; top: -100px; animation-delay: -5s; }
+        @keyframes move { from { transform: translate(0, 0); } to { transform: translate(100px, 100px); } }
+
+        nav {
+            position: fixed; top: 0; width: 100%; padding: 1.5rem 5%;
+            display: flex; justify-content: space-between; align-items: center;
+            backdrop-filter: blur(20px); z-index: 1000; border-bottom: 1px solid var(--border);
+        }
+
+        header {
+            padding: 150px 10% 50px 10%;
+            text-align: left;
+        }
+
+        .section-title { font-size: 3rem; font-weight: 700; margin-bottom: 1rem; }
+        .gradient-text { background: linear-gradient(to right, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+        section { padding: 50px 10%; }
+        .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 2rem; }
+        
+        .glass-card {
+            background: var(--card); border: 1px solid var(--border); padding: 2.5rem;
+            border-radius: 25px; backdrop-filter: blur(10px); transition: 0.4s;
+        }
+        .glass-card:hover { border-color: var(--primary); transform: translateY(-5px); }
+
+        .badge { 
+            display: inline-block; padding: 5px 15px; border-radius: 50px; 
+            font-size: 0.7rem; font-weight: 700; text-transform: uppercase; 
+            margin-bottom: 1rem; letter-spacing: 1px;
+        }
+        .badge-magnum { background: rgba(0, 242, 255, 0.1); border: 1px solid var(--primary); color: var(--primary); }
+        .badge-lab { background: rgba(112, 0, 255, 0.1); border: 1px solid var(--secondary); color: #d4b3ff; }
+
+        ul { list-style: none; margin-top: 1.5rem; }
+        li { margin-bottom: 10px; opacity: 0.8; display: flex; align-items: center; gap: 10px; font-size: 0.95rem; }
+        li::before { content: "→"; color: var(--primary); font-weight: bold; }
+
+        .back-link { color: white; text-decoration: none; opacity: 0.6; transition: 0.3s; font-size: 0.9rem; }
+        .back-link:hover { opacity: 1; color: var(--primary); }
+
+        footer { padding: 50px; text-align: center; opacity: 0.4; font-size: 0.8rem; border-top: 1px solid var(--border); }
+    </style>
+</head>
+<body>
+
+    <div class="bg-blobs"><div class="blob blue"></div><div class="blob purple"></div></div>
+
+    <nav>
+        <a href="../competences.html" class="back-link"><i class="fas fa-arrow-left"></i> Retour aux Blocs</a>
+        <div style="font-weight: 700; letter-spacing: 2px;">ILIAN<span style="color:var(--primary)">.</span>DOCS</div>
+    </nav>
+
+<header>
+    <p style="text-transform: uppercase; letter-spacing: 4px; font-size: 0.8rem; margin-bottom: 1rem; opacity: 0.7;">Référentiel BTS SIO</p>
+    <h1 class="section-title">Bloc 5 : <span class="gradient-text">Services Informatiques</span></h1>
+</header>
+<section>
+    <div class="card-grid">
+        <div class="glass-card">
+            <span class="badge badge-magnum">Entreprise</span>
+            <h3>Industrialisation & Déploiement</h3>
+            <p style="margin-top:1rem; opacity:0.6;">Mise à disposition de postes de travail opérationnels.</p>
+            <ul>
+                <li>Masterisation et déploiement via <strong>WDS / MDT</strong>.</li>
+                <li>Configuration de VLANs sur switchs <strong>Unify</strong>.</li>
+                <li>Rédaction de procédures techniques.</li>
+            </ul>
+        </div>
+        <div class="glass-card">
+            <span class="badge badge-lab">École</span>
+            <h3>Infrastructure Réseau CLI</h3>
+            <p style="margin-top:1rem; opacity:0.6;">Configuration bas niveau des équipements.</p>
+            <ul>
+                <li>Administration de switchs/routeurs/serveurs <strong>Cisco</strong> en CLI.</li>
+                <li>Déploiement de serveurs DHCP/DNS sous <strong>Debian (SSH)</strong>.</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+    <footer>© 2026 Ilian DUONG - Dossier de compétences</footer>
+
+    <script>
+        // Animation au scroll identique à l'index
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.glass-card').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'all 0.6s ease-out';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
