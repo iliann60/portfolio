@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compétences BTS SIO | Ilian DUONG</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #00f2ff;
+            --secondary: #7000ff;
+            --bg: #050505;
+            --card: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.1);
+            --text: #ffffff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Outfit', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* --- CONTENEUR HOLOGRAMME FLOU --- */
+        #hologram-container {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1; pointer-events: none;
+            filter: blur(4px);
+        }
+
+        .bg-blobs { position: fixed; width: 100%; height: 100%; z-index: -2; }
+        .blob { position: absolute; width: 500px; height: 500px; background: var(--secondary); filter: blur(150px); border-radius: 50%; opacity: 0.1; }
+        .blob.blue { background: var(--primary); left: -200px; top: -200px; }
+
+        nav {
+            padding: 1.5rem 5%;
+            display: flex; justify-content: space-between; align-items: center;
+            backdrop-filter: blur(20px); border-bottom: 1px solid var(--border);
+            position: sticky; top: 0; z-index: 1000;
+        }
+
+        .container { padding: 4rem 10%; position: relative; z-index: 1; }
+        
+        h1 { font-size: 3rem; margin-bottom: 1rem; }
+        .gradient-text { background: linear-gradient(to right, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+        .year-switcher {
+            display: flex; gap: 1rem; margin-bottom: 3rem;
+            background: var(--card); padding: 8px; border-radius: 50px;
+            border: 1px solid var(--border); width: fit-content;
+        }
+
+        .year-btn {
+            padding: 12px 30px; border-radius: 50px; border: none;
+            background: transparent; color: white; font-weight: 700;
+            cursor: pointer; transition: 0.5s; font-family: 'Outfit';
+            font-size: 1rem; opacity: 0.5;
+        }
+
+        .year-btn.active {
+            background: var(--primary); color: black; opacity: 1;
+            box-shadow: 0 0 20px rgba(0, 242, 255, 0.4);
+        }
+
+        .year-content {
+            display: none;
+            animation: slideFade 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        .year-content.active { display: block; }
+
+        .grid-blocs { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); 
+            gap: 2rem;
+        }
+
+        @keyframes slideFade {
+            0% { opacity: 0; transform: translateY(30px) scale(0.95); filter: blur(10px); }
+            100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+        }
+
+        .bloc-card {
+            background: var(--card); border: 1px solid var(--border);
+            padding: 2.5rem; border-radius: 25px; transition: 0.4s;
+            position: relative; overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+        .bloc-card:hover { border-color: var(--primary); transform: translateY(-10px); }
+        .bloc-card h2 { color: var(--primary); margin-bottom: 1rem; font-size: 1.4rem; }
+        .bloc-card p { opacity: 0.7; font-size: 0.9rem; margin-bottom: 2rem; height: 50px; }
+
+        .competence-link {
+            display: flex; align-items: center; justify-content: space-between;
+            color: white; text-decoration: none; padding: 12px 15px; border-radius: 10px;
+            background: rgba(255,255,255,0.02); margin-bottom: 8px; border: 1px solid transparent;
+            font-size: 0.85rem; transition: 0.3s;
+        }
+        .competence-link:hover { color: var(--primary); background: rgba(0, 242, 255, 0.05); border-color: var(--primary); padding-left: 20px; }
+
+        /* --- SECTION BOUTON PDF --- */
+        .pdf-section {
+            margin-top: 4rem;
+            padding: 2rem;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 20px;
+            border: 1px solid var(--border);
+        }
+
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 15px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white;
+            text-decoration: none;
+            padding: 15px 35px;
+            border-radius: 50px;
+            font-weight: 700;
+            transition: 0.4s;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .download-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(0, 242, 255, 0.4);
+        }
+
+        .locked-container {
+            text-align: center; padding: 100px 20px; background: var(--card);
+            border: 2px dashed var(--border); border-radius: 30px;
+        }
+        .locked-icon { font-size: 4rem; color: var(--secondary); margin-bottom: 1.5rem; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.1); opacity: 1; } }
+
+        .back-home { color: white; text-decoration: none; opacity: 0.6; font-size: 0.9rem; }
+        .back-home:hover { opacity: 1; color: var(--primary); }
+    </style>
+</head>
+<body>
+
+    <div id="hologram-container"></div>
+    <div class="bg-blobs"><div class="blob blue"></div></div>
+
+    <nav>
+        <a href="index.html" class="back-home"><i class="fas fa-arrow-left"></i> Retour au Portfolio</a>
+        <div style="font-weight: 700; letter-spacing: 2px;">BTS SIO<span style="color:var(--primary)">.</span>PORTFOLIO</div>
+    </nav>
+
+    <div class="container">
+        <p style="text-transform: uppercase; letter-spacing: 4px; font-size: 0.8rem; color: var(--primary);">Référentiel de compétences</p>
+        <h1>Parcours <span class="gradient-text">BTS SIO</span></h1>
+
+        <div class="year-switcher">
+            <button class="year-btn active" onclick="switchYear(1, this)">1ÈRE ANNÉE</button>
+            <button class="year-btn" onclick="switchYear(2, this)">2ÈME ANNÉE</button>
+        </div>
+
+        <div id="year1" class="year-content active">
+            <div class="grid-blocs">
+                <div class="bloc-card">
+                    <h2>Bloc 1</h2>
+                    <p>Gérer le patrimoine informatique de l'organisation.</p>
+                    <a href="competences/gerer-patrimoine-informatique.html" class="competence-link">Détails de la mission <i class="fas fa-chevron-right"></i></a>
+                </div>
+                <div class="bloc-card">
+                    <h2>Bloc 2</h2>
+                    <p>Répondre aux incidents et demandes d'assistance.</p>
+                    <a href="competences/repondre-incidents.html" class="competence-link">Détails de la mission <i class="fas fa-chevron-right"></i></a>
+                </div>
+                <div class="bloc-card">
+                    <h2>Bloc 3</h2>
+                    <p>Développer la présence en ligne de l'organisation.</p>
+                    <a href="competences/developper-presence-en-ligne.html" class="competence-link">Détails de la mission <i class="fas fa-chevron-right"></i></a>
+                </div>
+                <div class="bloc-card">
+                    <h2>Bloc 4</h2>
+                    <p>Travailler en mode projet.</p>
+                    <a href="competences/travailler-en-mode-projet.html" class="competence-link">Détails de la mission <i class="fas fa-chevron-right"></i></a>
+                </div>
+                <div class="bloc-card">
+                    <h2>Bloc 5</h2>
+                    <p>Mettre à disposition un service informatique.</p>
+                    <a href="competences/mettre-a-disposition-service-informatique.html" class="competence-link">Détails de la mission <i class="fas fa-chevron-right"></i></a>
+                </div>
+                <div class="bloc-card">
+                    <h2>Bloc 6</h2>
+                    <p>Organiser son développement professionnel.</p>
+                    <a href="competences/organiser-developpement-professionnel.html" class="competence-link">Détails de la mission <i class="fas fa-chevron-right"></i></a>
+                </div>
+            </div>
+
+            <div class="pdf-section">
+                <p style="margin-bottom: 1.5rem; opacity: 0.7;">Consulter le tableau de synthèse complet (E4)</p>
+                <a href="assets/tableau-competences-ilian.pdf" class="download-btn" target="_blank">
+                    <i class="fas fa-file-pdf"></i> Télécharger le PDF
+                </a>
+            </div>
+        </div>
+
+        <div id="year2" class="year-content">
+            <div class="locked-container">
+                <div class="locked-icon"><i class="fas fa-lock"></i></div>
+                <h2 style="font-size: 2rem; margin-bottom: 10px;">Niveau non débloqué</h2>
+                <p style="opacity: 0.6; font-family: 'Fira Code', monospace;">Chargement des données en cours...</p>
+            </div>
+        </div>
+    </div>
+
+    <footer style="padding: 4rem; text-align: center; opacity: 0.4;">
+        © 2026 Ilian DUONG - Document de certification BTS SIO
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        let scene, camera, renderer, object;
+        function initThree() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.getElementById('hologram-container').appendChild(renderer.domElement);
+            const geometry = new THREE.TorusKnotGeometry(10, 3, 100, 16);
+            const material = new THREE.MeshBasicMaterial({ color: 0x00f2ff, wireframe: true, transparent: true, opacity: 0.05 });
+            object = new THREE.Mesh(geometry, material);
+            scene.add(object);
+            camera.position.z = 30;
+        }
+        function animate() {
+            requestAnimationFrame(animate);
+            object.rotation.x += 0.002;
+            object.rotation.y += 0.002;
+            renderer.render(scene, camera);
+        }
+        function switchYear(year, btn) {
+            document.querySelectorAll('.year-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            document.querySelectorAll('.year-content').forEach(content => content.classList.remove('active'));
+            document.getElementById('year' + year).classList.add('active');
+        }
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+        initThree();
+        animate();
+    </script>
+</body>
+</html>
