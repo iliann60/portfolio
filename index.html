@@ -2,7 +2,6 @@
 <html lang="fr">
 <head>
 
-<!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-VHXN4PW3CT"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -36,6 +35,7 @@
             font-family: 'Outfit', sans-serif;
             overflow-x: hidden;
             scroll-behavior: smooth;
+            -webkit-tap-highlight-color: transparent; /* Enlève le flash bleu sur mobile */
         }
 
         /* Arrière-plan dynamique */
@@ -54,11 +54,14 @@
             to { transform: translate(100px, 100px); }
         }
 
-        /* Navigation */
+        /* Navigation PC */
         nav {
             position: fixed; top: 0; width: 100%; padding: 1.5rem 5%;
             display: flex; justify-content: space-between; align-items: center;
             backdrop-filter: blur(20px); z-index: 1000; border-bottom: 1px solid var(--border);
+        }
+        .nav-links {
+            display: flex;
         }
         .nav-links a {
             color: white; text-decoration: none; margin-left: 2rem;
@@ -66,10 +69,26 @@
         }
         .nav-links a:hover { opacity: 1; color: var(--primary); }
 
-        /* Social Sidebar (Ajout Leboncoin) */
+        /* Menu Hamburger (Caché par défaut sur PC) */
+        .hamburger {
+            display: none;
+            cursor: pointer;
+            z-index: 1002;
+        }
+        .bar {
+            display: block;
+            width: 25px;
+            height: 3px;
+            margin: 5px auto;
+            transition: all 0.3s ease-in-out;
+            background-color: white;
+            box-shadow: 0 0 5px var(--primary);
+        }
+
+        /* Social Sidebar */
         .social-sidebar {
             position: fixed; left: 2rem; bottom: 50%; transform: translateY(50%);
-            display: flex; flex-direction: column; gap: 1.5rem; z-index: 1000;
+            display: flex; flex-direction: column; gap: 1.5rem; z-index: 900;
         }
         .social-sidebar a {
             color: white; font-size: 1.5rem; transition: 0.4s; opacity: 0.4;
@@ -141,24 +160,96 @@
         }
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
 
+        /* Contrôles Mobile (Cachés sur PC) */
+        .mobile-controls { display: none; }
+
         footer { padding: 50px; text-align: center; opacity: 0.4; font-size: 0.8rem; border-top: 1px solid var(--border); }
 
-        /* AJOUTS POUR LE MOBILE - NE MODIFIE PAS TON CODE EXISTANT */
+        /* --- MEDIA QUERIES & MOBILE MENU --- */
         @media (max-width: 768px) {
-            nav { padding: 1rem; justify-content: center; }
-            .nav-links { display: none; } /* On cache les liens pour pas que ça se chevauche */
-            .social-sidebar { 
-                flex-direction: row; bottom: 20px; left: 50%; 
-                transform: translateX(-50%); background: rgba(0,0,0,0.5);
-                padding: 10px 20px; border-radius: 50px; backdrop-filter: blur(10px);
-                border: 1px solid var(--border);
-            }
+            
+            /* Ajustements généraux */
             header { padding: 0 5%; }
             .pp-container { width: 150px; height: 150px; }
             .section-title { font-size: 1.8rem; }
             section { padding: 60px 5%; }
             .homelab-box { padding: 2rem 1rem; }
             .homelab-box h2 { font-size: 1.8rem !important; }
+
+            /* Navigation Mobile */
+            nav { padding: 1rem; justify-content: space-between; }
+            
+            /* Afficher le Burger */
+            .hamburger { display: block; }
+            .hamburger.active .bar:nth-child(1) { transform: translateY(8px) rotate(45deg); background: var(--primary); }
+            .hamburger.active .bar:nth-child(2) { opacity: 0; }
+            .hamburger.active .bar:nth-child(3) { transform: translateY(-8px) rotate(-45deg); background: var(--primary); }
+
+            /* Transformer les liens en panneau plein écran */
+            .nav-links {
+                position: fixed;
+                left: 100%;
+                top: 0;
+                flex-direction: column;
+                background-color: rgba(5, 5, 5, 0.98); /* Fond presque noir */
+                width: 100%;
+                height: 100vh;
+                justify-content: center;
+                align-items: center;
+                transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                z-index: 1001; /* En dessous du burger (1002) */
+                backdrop-filter: blur(10px);
+            }
+
+            .nav-links.active {
+                left: 0;
+            }
+
+            .nav-links a {
+                margin: 1.5rem 0;
+                font-size: 1.5rem;
+                opacity: 1;
+                margin-left: 0; /* Reset de la marge PC */
+            }
+
+            /* Sidebar Social Mobile */
+            .social-sidebar { 
+                flex-direction: row; bottom: 20px; left: 50%; 
+                transform: translateX(-50%); background: rgba(0,0,0,0.5);
+                padding: 10px 20px; border-radius: 50px; backdrop-filter: blur(10px);
+                border: 1px solid var(--border);
+                z-index: 900;
+            }
+
+            /* --- CONTROLES SNAKE MOBILE --- */
+            .mobile-controls {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+                margin-top: 25px;
+            }
+            .d-row {
+                display: flex;
+                gap: 20px;
+            }
+            .d-btn {
+                width: 55px; height: 55px;
+                background: rgba(0, 242, 255, 0.05);
+                border: 1px solid var(--primary);
+                border-radius: 50%;
+                color: var(--primary);
+                font-size: 1.2rem;
+                display: flex; justify-content: center; align-items: center;
+                transition: 0.1s;
+                backdrop-filter: blur(5px);
+                box-shadow: 0 0 10px rgba(0, 242, 255, 0.1);
+            }
+            .d-btn:active {
+                background: var(--primary);
+                color: black;
+                transform: scale(0.9);
+            }
         }
     </style>
 </head>
@@ -176,14 +267,23 @@
     </div>
 
     <nav>
-        <div style="font-weight: 700; font-size: 1.2rem; letter-spacing: 2px;">ILIAN<span style="color:var(--primary)">.</span>PORTFOLIO</div>
+        <div style="font-weight: 700; font-size: 1.2rem; letter-spacing: 2px; z-index: 1002;">
+            ILIAN<span style="color:var(--primary)">.</span>PORTFOLIO
+        </div>
+
+        <div class="hamburger">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
+
         <div class="nav-links">
-            <a href="#about">Profil</a>
-            <a href="#pro">Missions Magnum</a>
-            <a href="#projects">Projets Perso</a>
-            <a href="#homelab">Lab</a>
-            <a href="#skills">Compétences</a>
-            <a href="competences.html" style="color: var(--primary); opacity: 1; font-weight: bold;">BTS SIO / ALTERNANCE</a>
+            <a href="#about" class="nav-item">Profil</a>
+            <a href="#pro" class="nav-item">Missions Magnum</a>
+            <a href="#projects" class="nav-item">Projets Perso</a>
+            <a href="#homelab" class="nav-item">Lab</a>
+            <a href="#skills" class="nav-item">Compétences</a>
+            <a href="competences.html" class="nav-item" style="color: var(--primary); opacity: 1; font-weight: bold;">BTS SIO / ALTERNANCE</a>
         </div>
     </nav>
 
@@ -358,31 +458,41 @@
             <button onclick="startGame()" class="btn" style="margin: 10px auto; font-size: 0.8rem; padding: 8px 20px;">
                 <i class="fas fa-play"></i> LANCER LE SYSTÈME
             </button>
-            <p style="font-size: 0.7rem; opacity: 0.5;">Utilisez les flèches du clavier pour diriger le flux.</p>
+            <p style="font-size: 0.7rem; opacity: 0.5; display: block;" class="pc-hint">Utilisez les flèches du clavier.</p>
         </div>
+
+        <div class="mobile-controls">
+            <button class="d-btn" onclick="setDirection('UP')"><i class="fas fa-chevron-up"></i></button>
+            <div class="d-row">
+                <button class="d-btn" onclick="setDirection('LEFT')"><i class="fas fa-chevron-left"></i></button>
+                <button class="d-btn" onclick="setDirection('RIGHT')"><i class="fas fa-chevron-right"></i></button>
+            </div>
+            <button class="d-btn" onclick="setDirection('DOWN')"><i class="fas fa-chevron-down"></i></button>
+        </div>
+
     </div>
 </section>
 
 <script>
+    // --- JEU SNAKE ---
     const canvas = document.getElementById("snakeGame");
     const ctx = canvas.getContext("2d");
     const scoreElement = document.getElementById("score");
     
-    const box = 20; // Taille d'une case
-    const rows = 15; // Nombre de cases (300 / 20)
+    const box = 20; 
+    const rows = 15; 
     
     let snake, food, direction, nextDirection, score, game;
 
     function startGame() {
         clearInterval(game);
-        // On initialise avec des coordonnées de grille (indices 0 à 14)
         snake = [{ x: 7, y: 7 }]; 
         direction = "RIGHT";
         nextDirection = "RIGHT";
         score = 0;
         scoreElement.innerHTML = "Score: " + score;
         spawnFood();
-        game = setInterval(draw, 170); // Vitesse plus lente
+        game = setInterval(draw, 170); 
     }
 
     function spawnFood() {
@@ -390,29 +500,35 @@
             x: Math.floor(Math.random() * rows),
             y: Math.floor(Math.random() * rows)
         };
-        // Ne pas faire apparaître sur le serpent
         for(let cell of snake) {
             if(cell.x === food.x && cell.y === food.y) spawnFood();
         }
     }
 
+    // Gestion du clavier (PC)
     window.addEventListener("keydown", function(e) {
         if([37, 38, 39, 40].indexOf(e.keyCode) > -1) e.preventDefault();
         
-        if (e.keyCode == 37 && direction != "RIGHT") nextDirection = "LEFT";
-        else if (e.keyCode == 38 && direction != "DOWN") nextDirection = "UP";
-        else if (e.keyCode == 39 && direction != "LEFT") nextDirection = "RIGHT";
-        else if (e.keyCode == 40 && direction != "UP") nextDirection = "DOWN";
+        if (e.keyCode == 37) setDirection('LEFT');
+        else if (e.keyCode == 38) setDirection('UP');
+        else if (e.keyCode == 39) setDirection('RIGHT');
+        else if (e.keyCode == 40) setDirection('DOWN');
     });
+
+    // Gestion des boutons (Mobile & Fonction commune)
+    function setDirection(newDir) {
+        if (newDir === 'LEFT' && direction !== 'RIGHT') nextDirection = 'LEFT';
+        if (newDir === 'UP' && direction !== 'DOWN') nextDirection = 'UP';
+        if (newDir === 'RIGHT' && direction !== 'LEFT') nextDirection = 'RIGHT';
+        if (newDir === 'DOWN' && direction !== 'UP') nextDirection = 'DOWN';
+    }
 
     function draw() {
         direction = nextDirection;
         
-        // Nettoyage propre du canvas
         ctx.fillStyle = "black";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        // Dessin du serpent (conversion indices -> pixels)
         for (let i = 0; i < snake.length; i++) {
             ctx.fillStyle = (i == 0) ? "#00f2ff" : "#7000ff";
             ctx.fillRect(snake[i].x * box, snake[i].y * box, box, box);
@@ -420,7 +536,6 @@
             ctx.strokeRect(snake[i].x * box, snake[i].y * box, box, box);
         }
 
-        // Dessin nourriture
         ctx.fillStyle = "#00ff88";
         ctx.fillRect(food.x * box, food.y * box, box, box);
 
@@ -432,7 +547,6 @@
         if (direction == "RIGHT") headX++;
         if (direction == "DOWN") headY++;
 
-        // VERIFICATION STRICTE DES BORDURES (Indices 0 à 14)
         if (headX < 0 || headX >= rows || headY < 0 || headY >= rows || collision({x: headX, y: headY}, snake)) {
             clearInterval(game);
             setTimeout(() => { 
@@ -467,6 +581,7 @@
     </footer>
 
     <script>
+        // --- ANIMATIONS D'APPARITION ---
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -483,6 +598,7 @@
             observer.observe(el);
         });
 
+        // --- EFFET GLASS HOVER ---
         document.querySelectorAll('.glass-card').forEach(card => {
             card.addEventListener('mousemove', (e) => {
                 const rect = card.getBoundingClientRect();
@@ -494,11 +610,23 @@
                 card.style.background = 'var(--card)';
             });
         });
+
+        // --- GESTION MENU MOBILE ---
+        const hamburger = document.querySelector(".hamburger");
+        const navMenu = document.querySelector(".nav-links");
+        const navItems = document.querySelectorAll(".nav-item");
+
+        hamburger.addEventListener("click", () => {
+            hamburger.classList.toggle("active");
+            navMenu.classList.toggle("active");
+        });
+
+        navItems.forEach(item => {
+            item.addEventListener("click", () => {
+                hamburger.classList.remove("active");
+                navMenu.classList.remove("active");
+            });
+        });
     </script>
 </body>
 </html>
-
-
-
-
-
